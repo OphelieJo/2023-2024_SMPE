@@ -4,7 +4,7 @@
 ## Figure 1
 
 #### Data
-- [ ] Type of graphic adapted
+- [x] Type of graphic adapted
 - [ ] Interpolation make sens
 - [ ] Sufficient number of points
 - [ ] Building method clear
