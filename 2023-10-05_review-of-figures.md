@@ -1,6 +1,5 @@
----
 title: "Review of figures"
----
+
 
 ## Figure 1
 
