@@ -1,4 +1,4 @@
-title: "Review of figures"
+# Review of figures
 
 
 ## Figure 1
