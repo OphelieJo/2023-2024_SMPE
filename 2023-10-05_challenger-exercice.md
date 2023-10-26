@@ -1,6 +1,4 @@
----
-title : 'MOOC module 2 exercice 5: Challenger'
----
+# MOOC module 2 exercice 5: Challenger
 
 
 The document is presented in a logical order (star4ng with the overall data, then moving on to the analyses). The tables and diagrams help to illustrate the explana4ons, and these explana4ons are clear in terms of the steps followed, even if some choices are ques4onable. Removing data even before carrying out the analyses, and keeping only those where there is a joint problem, biases the analysis from the outset.
