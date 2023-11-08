@@ -1,0 +1,126 @@
+---
+title: "French given names per year per department"
+author: "Lucas Mello Schnorr, Jean-Marc Vincent"
+date: "October, 2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# The problem context
+The aim of the activity is to develop a methodology to answer a specific question on a given dataset. 
+
+The dataset is the set of Firstname given in France on a large period of time. 
+[https://www.insee.fr/fr/statistiques/2540004](https://www.insee.fr/fr/statistiques/fichier/2540004/dpt2021_csv.zip), we choose this dataset because it is sufficiently large, you can't do the analysis by hand, the structure is simple
+
+
+You need to use the _tidyverse_ for this analysis. Unzip the file _dpt2020_txt.zip_ (to get the **dpt2020.csv**). Read in R with this code. Note that you might need to install the `readr` package with the appropriate command.
+
+## Download Raw Data from the website
+```{r}
+file = "dpt2021_csv.zip"
+if(!file.exists(file)){
+  download.file("https://www.insee.fr/fr/statistiques/fichier/2540004/dpt2021_csv.zip",
+	destfile=file)
+}
+unzip(file)
+```
+Check if your file is the same as in the first analysis (reproducibility)
+```{bash}
+md5 dpt2021.csv
+```
+expected :
+MD5 (dpt2021.csv) = f18a7d627883a0b248a0d59374f3bab7
+
+
+## Build the Dataframe from file
+
+```{r}
+library(tidyverse)
+
+FirstNames <- read_delim("dpt2021.csv",delim=";")
+```
+
+All of these following questions may need a preliminary analysis of the data, feel free to present answers and justifications in your own order and structure your report as it should be for a scientific report.
+
+1. Choose a firstname and analyse its frequency along time. Compare several firstnames frequency
+
+##Creation of a dataframe without na values
+```{r}
+FirstNames$annais[FirstNames$annais %in% c("XXXX")] <- NA
+FirstNames$dpt[FirstNames$dpt %in% c("XX")] <- NA
+
+df <- na.omit(FirstNames)
+
+```
+
+##analyse for 1 firstname -> Zyan
+#Creation of table of frequency for ZYAN
+```{r}
+zyan_freq <- df[df$preusuel == "ZYAN", ]
+```
+
+#Creation of the graph depending on the "zyan_freq" table
+```{r}
+library(ggplot2)
+
+ggplot(zyan_freq, aes(x = annais, y = nombre)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Frequency of the firstname Zyan depending on the year", x = "Year", y = "Frequency")
+```
+##Analyse for multiple firstnames --> Zyan, Otto, Oriane
+#Creation table for frequency
+```{r}
+
+multiple_freq <- df[df$preusuel %in% c("ZYAN", "OTTO"), ]
+
+```
+
+```{r}
+ggplot(multiple_freq, aes(x = annais, y = nombre, fill = preusuel)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Comp freq", x = "Year", y = "Frequency") +
+  scale_fill_discrete(name = "Firstname")
+```
+
+
+2. Establish by gender the most given firstname by year. 
+
+```{r}
+library(dplyr)
+
+most_given_names <- df %>%
+  group_by(annais, sexe, preusuel) %>%
+  summarise(total = sum(nombre), .groups = 'drop') %>%
+  group_by(annais, sexe) %>%
+  filter(total == max(total)) %>%
+  arrange(annais)
+
+print(most_given_names)
+```
+Analyse the evolution of the most frequent firstname.
+```{r}
+most_given_name_allyears <- df %>%
+  group_by(sexe, preusuel) %>%
+  summarise(total = sum(nombre), .groups = 'drop') %>%
+  group_by(sexe) %>%
+  filter(total == max(total))
+
+most_given_name_allyears <- most_given_name_allyears %>%
+  rename(most_given_name = preusuel)
+
+# Affichez le jeu de données résultant
+print(most_given_name_allyears)
+```
+#graph
+```{r}
+
+```
+
+
+
+3. Optional : Which department has a larger variety of names along time ? Is there some sort of geographical correlation with the data?
