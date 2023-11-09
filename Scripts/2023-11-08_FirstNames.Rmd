@@ -113,7 +113,6 @@ most_given_name_allyears <- df %>%
 most_given_name_allyears <- most_given_name_allyears %>%
   rename(most_given_name = preusuel)
 
-# Affichez le jeu de données résultant
 print(most_given_name_allyears)
 ```
 #graph
