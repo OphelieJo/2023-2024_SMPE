@@ -72,7 +72,7 @@ ggplot(zyan_freq, aes(x = annais, y = nombre)) +
   geom_bar(stat = "identity") +
   labs(title = "Frequency of the firstname Zyan depending on the year", x = "Year", y = "Frequency")
 ```
-##Analyse for multiple firstnames --> Zyan, Otto, Oriane
+##Analyse for multiple firstnames --> Zyan, Otto
 #Creation table for frequency
 ```{r}
 
@@ -83,7 +83,7 @@ multiple_freq <- df[df$preusuel %in% c("ZYAN", "OTTO"), ]
 ```{r}
 ggplot(multiple_freq, aes(x = annais, y = nombre, fill = preusuel)) +
   geom_bar(stat = "identity") +
-  labs(title = "Comp freq", x = "Year", y = "Frequency") +
+  labs(title = "Comparaison of the frequency of the Zyan and Otto name depending on the year", x = "Year", y = "Frequency") +
   scale_fill_discrete(name = "Firstname")
 ```
 
