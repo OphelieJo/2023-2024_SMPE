@@ -1,0 +1,149 @@
+---
+title: "2023-11-29_LineareRegression"
+output: html_document
+date: "2023-11-29"
+---
+
+##Graphs and regression done / analyse to do
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+df = read.csv("https://github.com/alegrand/M2R-ParallelQuicksort/raw/master/data/sama_2014-10-13/measurements_03:47.csv",header = T)
+df
+```
+```{r}
+df$Type=as.factor(df$Type)
+summary(df)
+unique(df$Size)
+```
+
+```{r}
+df %>% group_by(Type, Size, .groups="drop" ) %>% summarise(n=n(), mean=mean(Time), sd=sd(Time), se=sd/sqrt(n)) -> df_sum
+df_sum
+```
+
+```{r}
+df_sum %>%  ggplot(aes(x=Size,y=mean, color=Type)) + geom_point() + geom_errorbar(aes(ymin=mean-6*se, ymax=mean+6*se)) +
+  theme_bw() + geom_line() # + scale_x_log10()
+```
+
+```{r}
+str(df)
+```
+
+
+
+```{r}
+df_seq <- df %>% filter(Type == " Sequential")
+print(df_seq)
+```
+```{r}
+df_builtIn <- df %>% filter(Type == " Built-in")
+print(df_builtIn)
+```
+```{r}
+df_parallel <- df %>% filter(Type == " Parallel")
+print(df_parallel)
+```
+```{r}
+ggplot(df_builtIn, aes(x = Size, y = Time)) +
+  geom_point() +
+  labs(title = "plot for Time depending on Size for Built-in Type",
+       x = "Size",
+       y = "Time") +
+  theme_bw()
+```
+
+
+```{r}
+df_buitIn_littleSize = df_builtIn %>% filter(Size <= 1e+04)
+print(df_buitIn_littleSize)
+```
+
+
+```{r}
+ggplot(df_seq, aes(x = Size, y = Time)) +
+  geom_point() +
+  labs(title = "Plot for Sequential type",
+       x = "Size",
+       y = "Time") +
+  theme_bw()
+```
+
+```{r}
+ggplot(df_builtIn, aes(x = Size, y = Time)) +
+  geom_point() +
+  labs(title = "Plot for Built-in type",
+       x = "Size",
+       y = "Time") +
+  theme_bw()
+```
+```{r}
+ggplot(df_parallel, aes(x = Size, y = Time)) +
+  geom_point() +
+  labs(title = "Plot for Parallel type",
+       x = "Size",
+       y = "Time") +
+  theme_bw()
+```
+
+
+
+```{r}
+ggplot(df, aes(x = Size, y = Time, color = Type)) +
+  geom_point() +
+  labs(title = "",
+       x = "Size",
+       y = "Time") +
+  theme_bw()
+```
+
+# Afficher les tracés séparés
+print(plots)
+
+```{r}
+regression <- ggplot(df, aes(x = Size, y = Time, color = Type)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Lineare Regression for each type ",
+       x = "Size",
+       y = "Time") +
+  theme_bw()
+
+# Afficher les tracés séparés
+print(plots)
+```
+
+
+```{r}
+model <- lm(Time~Size, data = df)
+summary(model)
+```
+
+```{r}
+model_seq <- lm(Time~Size, data = df_seq)
+summary(model_seq)
+```
+```{r}
+model_builtIn <- lm(Time~Size, data = df_builtIn)
+summary(model_builtIn)
+```
+```{r}
+model_parallel <- lm(Time~Size, data = df_parallel)
+summary(model_parallel)
+```
+
+
+
