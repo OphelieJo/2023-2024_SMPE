@@ -2,9 +2,10 @@
 title: "2023-11-29_LineareRegression"
 output: html_document
 date: "2023-11-29"
+output: 
+  md_document
+    variant: markdown_github
 ---
-
-##Graphs and regression done / analyse to do
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -57,6 +58,8 @@ print(df_builtIn)
 df_parallel <- df %>% filter(Type == " Parallel")
 print(df_parallel)
 ```
+
+##Analysis for Built-In
 ```{r}
 ggplot(df_builtIn, aes(x = Size, y = Time)) +
   geom_point() +
@@ -65,14 +68,33 @@ ggplot(df_builtIn, aes(x = Size, y = Time)) +
        y = "Time") +
   theme_bw()
 ```
+```{r}
+model_builtIn <- lm(Time~Size, data = df_builtIn)
+summary(model_builtIn)
+```
+The R-squared is high (0.998) and the p-value is significative (less than 0.0001). For the Built-in type the size seems to have an effect on the time, with the confidence of this result higher than 99.9999%.
 
 
+The disposition of the points is strange. To see if there is a difference without a high value, we tried to make Analysis with the little values only (below). The plot is look the same and the regression test is also significative. 
 ```{r}
 df_buitIn_littleSize = df_builtIn %>% filter(Size <= 1e+04)
 print(df_buitIn_littleSize)
 ```
+```{r}
+ggplot(df_buitIn_littleSize, aes(x = Size, y = Time)) +
+  geom_point() +
+  labs(title = "plot for Time depending on Size for Built-in Type",
+       x = "Size",
+       y = "Time") +
+  theme_bw()
+```
 
+```{r}
+model_buitIn_littleSize <- lm(Time~Size, data = df_buitIn_littleSize)
+summary(model_seq)
+```
 
+##Analysis for sequential type
 ```{r}
 ggplot(df_seq, aes(x = Size, y = Time)) +
   geom_point() +
@@ -83,13 +105,12 @@ ggplot(df_seq, aes(x = Size, y = Time)) +
 ```
 
 ```{r}
-ggplot(df_builtIn, aes(x = Size, y = Time)) +
-  geom_point() +
-  labs(title = "Plot for Built-in type",
-       x = "Size",
-       y = "Time") +
-  theme_bw()
+model_seq <- lm(Time~Size, data = df_seq)
+summary(model_seq)
 ```
+The R-squared is high (0.9996) and the p-value is significative (less than 0.0001). For the Sequential type the size seems to have an effect on the time, with the confidence of this result higher than 99.9999%.
+
+##Analysis for parallel type
 ```{r}
 ggplot(df_parallel, aes(x = Size, y = Time)) +
   geom_point() +
@@ -98,9 +119,14 @@ ggplot(df_parallel, aes(x = Size, y = Time)) +
        y = "Time") +
   theme_bw()
 ```
+```{r}
+model_parallel <- lm(Time~Size, data = df_parallel)
+summary(model_parallel)
+```
+The R-squared is high (0.9713) and the p-value is significative (less than 0.0001). For the Parallel type the size seems to have an effect on the time, with the confidence of this result higher than 99.9999%.
 
 
-
+##Global Analysis
 ```{r}
 ggplot(df, aes(x = Size, y = Time, color = Type)) +
   geom_point() +
@@ -109,9 +135,6 @@ ggplot(df, aes(x = Size, y = Time, color = Type)) +
        y = "Time") +
   theme_bw()
 ```
-
-# Afficher les tracés séparés
-print(plots)
 
 ```{r}
 regression <- ggplot(df, aes(x = Size, y = Time, color = Type)) +
@@ -126,24 +149,17 @@ regression <- ggplot(df, aes(x = Size, y = Time, color = Type)) +
 print(plots)
 ```
 
+According to these plots and to the 3 analysis by type, the size seems to have an effect on the time for each type. It could be interesting to test the effect of the size on the time independently of the type.
 
 ```{r}
 model <- lm(Time~Size, data = df)
 summary(model)
 ```
+The R-squared is high (0.9532) and the p-value is significative (less than 0.0001). The size seems to have an effect on the time indenpently of the type, with the confidence of this result higher than 99.9999%.
 
-```{r}
-model_seq <- lm(Time~Size, data = df_seq)
-summary(model_seq)
-```
-```{r}
-model_builtIn <- lm(Time~Size, data = df_builtIn)
-summary(model_builtIn)
-```
-```{r}
-model_parallel <- lm(Time~Size, data = df_parallel)
-summary(model_parallel)
-```
+
+
+
 
 
 
